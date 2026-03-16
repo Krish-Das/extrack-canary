@@ -1,5 +1,8 @@
+import { Suspense } from "react"
 import { Container } from "@/components/layout/container"
+import { Spinner } from "@/components/loading/spinner"
 import { TransactionList } from "./local-comps/transaction-list"
+import { ClientOnly } from "@ark-ui/react/client-only"
 
 export default function Page() {
   return (
@@ -9,7 +12,9 @@ export default function Page() {
           Activities
         </h3>
 
-        <TransactionList />
+        <ClientOnly fallback={<Spinner />}>
+          <TransactionList />
+        </ClientOnly>
       </div>
     </Container>
   )
