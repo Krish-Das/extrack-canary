@@ -22,6 +22,7 @@ export function Form(props: {
         form.handleSubmit()
       }}
     >
+      <Spacer className="h-2.5" />
       <form.AppField
         children={(field) => (
           <field.AmountField label="Amount" placeholder={formatter.format(0)} />
@@ -59,7 +60,6 @@ export function Form(props: {
       </Toolbar>
 
       <SubmitButton />
-      <Spacer className="h-4" />
     </form>
   )
 }

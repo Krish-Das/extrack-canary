@@ -1,0 +1,201 @@
+.Backdrop {
+  --backdrop-opacity: 0.2;
+  --bleed: 3rem;
+
+  position: fixed;
+  z-index: 50;
+  min-height: 100dvh;
+  inset: 0;
+  background-color: black;
+  opacity: calc(var(--backdrop-opacity) * (1 - var(--drawer-swipe-progress)));
+  transition-duration: 450ms;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+
+  @media (prefers-color-scheme: dark) {
+    --backdrop-opacity: 0.7;
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+  }
+
+  &[data-swiping] {
+    transition-duration: 0ms;
+  }
+
+  &[data-ending-style] {
+    pointer-events: none;
+    transition-duration: calc(var(--drawer-swipe-strength) * 400ms);
+  }
+}
+
+.Viewport {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.Popup {
+  --handle-height: 0.25rem;
+  --handle-padding-top: 0.25rem;
+  --handle-padding-bottom: 0.5rem;
+
+  --bleed: 3rem;
+  --peek: 1rem;
+  --stack-step: 0.05;
+  --stack-progress: clamp(0, var(--drawer-swipe-progress), 1);
+  --stack-peek-offset: max(
+    0px,
+    calc((var(--nested-drawers) - var(--stack-progress)) * var(--peek))
+  );
+  --stack-scale-base: max(
+    0,
+    calc(1 - (var(--nested-drawers) * var(--stack-step)))
+  );
+  --stack-scale: calc(
+    var(--stack-scale-base) +
+    (var(--stack-step) * var(--stack-progress))
+  );
+  --stack-shrink: calc(1 - var(--stack-scale));
+  --stack-height: max(
+    0px,
+    calc(var(--drawer-frontmost-height, var(--drawer-height)) - var(--bleed))
+  );
+  --translate-y: calc(
+    var(--drawer-swipe-movement-y) -
+    var(--stack-peek-offset) -
+    (var(--stack-shrink) * var(--stack-height))
+  );
+
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  max-height: calc(80vh + var(--bleed));
+  height: var(--drawer-height, auto);
+  margin-bottom: calc(-1 * var(--bleed));
+  padding: 0rem 0.375rem 0.375rem;
+  padding-bottom: calc(
+    0.375rem +
+    env(safe-area-inset-bottom, 0px) +
+    var(--bleed)
+  );
+  outline: none;
+
+  transform-origin: 50% calc(100% - var(--bleed));
+  transition:
+    transform 450ms cubic-bezier(0.32, 0.72, 0, 1),
+    height 450ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 450ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  transform: translateY(var(--translate-y)) scale(var(--stack-scale));
+
+  & .Content {
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  }
+
+  &[data-swiping],
+  &[data-nested-drawer-swiping] {
+    transition-duration: 0ms;
+  }
+
+  &[data-swiping] {
+    user-select: none;
+  }
+
+  &[data-nested-drawer-open] {
+    height: calc(var(--stack-height) + var(--bleed));
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    transform: translateY(calc(100% - var(--bleed) + 2px));
+  }
+
+  &[data-ending-style] {
+    transition-duration: calc(var(--drawer-swipe-strength) * 400ms);
+
+    & .Content {
+      box-shadow: 0 2px 10px rgb(0 0 0 / 0);
+    }
+  }
+}
+
+.Content {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  transition: opacity 300ms cubic-bezier(0.45, 1.005, 0, 1.005);
+  padding: 1rem;
+  position: relative;
+  /** Space to clear for the handle */
+  /** Use the variables to change the space */
+  padding-top: calc(
+    var(--handle-padding-top) +
+    var(--handle-height) +
+    var(--handle-padding-bottom)
+  );
+
+  border-radius: 1.5rem;
+  background-color: var(--background-primary-elevated);
+
+  [data-nested-drawer-open] & {
+    opacity: calc(1 - var(--nested-drawers) * 0.08);
+  }
+
+  [data-nested-drawer-open][data-nested-drawer-swiping] & {
+    opacity: 1;
+  }
+
+  /* biome-ignore lint/correctness/noUnknownProperty: corner-shape is a new CSS property (draft spec) */
+  @supports (corner-shape: squircle) {
+    & {
+      border-radius: 3.25rem;
+      /* biome-ignore lint/correctness/noUnknownProperty lint/correctness/noUnknownFunction: corner-shape/superellipse are new CSS features (draft spec) */
+      corner-shape: superellipse(1.8);
+    }
+  }
+}
+
+.Handle {
+  position: absolute;
+  top: var(--handle-padding-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2rem;
+  height: var(--handle-height);
+  border-radius: 9999px;
+  background-color: #cfcfcf;
+  mix-blend-mode: plus-darker;
+  transition: opacity 0.2s;
+
+  /** Hitbox for the handle */
+  &::after {
+    content: "";
+    position: absolute;
+    width: 170%;
+    height: 1.5rem;
+    top: calc(var(--handle-padding-top) * -2);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  [data-nested-drawer-open] & {
+    opacity: 0;
+  }
+
+  [data-nested-drawer-open][data-nested-drawer-swiping] & {
+    opacity: 1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    & {
+      background-color: #333333;
+      mix-blend-mode: plus-lighter;
+    }
+  }
+}
