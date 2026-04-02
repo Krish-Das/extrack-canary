@@ -28,7 +28,7 @@ import {
 } from "@/lib/schema/categories"
 import { cn, sanitizeName } from "@/lib/utils"
 
-export function Categories() {
+export function Categories({ type }: { type?: "expense" | "income" }) {
   const categories = useQuery(api.category.list)
 
   if (!categories) return <Spinner />
@@ -36,43 +36,54 @@ export function Categories() {
   const incomeCategories = categories.filter((_) => _.type === "income")
   const expenseCategories = categories.filter((_) => _.type === "expense")
 
+  const showExpense = type === undefined || type === "expense"
+  const showIncome = type === undefined || type === "income"
+
   return (
     <List.Root>
-      <List.Header className="relative flex items-center">
-        <List.Text level="heading">Expense</List.Text>
-        <Button
-          className="absolute right-4.5"
-          isDisabled
-          isIconOnly
-          size="xs"
-          variant="ghost"
-        >
-          􀅼
-        </Button>
-      </List.Header>
-      <List.Wrapper>
-        {expenseCategories.map((cat) => (
-          <Item category={cat} key={cat._id} />
-        ))}
-      </List.Wrapper>
+      {showExpense && (
+        <>
+          <List.Header className="relative flex items-center">
+            <List.Text level="heading">Expense</List.Text>
+            <Button
+              className="absolute right-4.5"
+              isDisabled
+              isIconOnly
+              size="xs"
+              variant="ghost"
+            >
+              􀅼
+            </Button>
+          </List.Header>
+          <List.Wrapper>
+            {expenseCategories.map((cat) => (
+              <Item category={cat} key={cat._id} />
+            ))}
+          </List.Wrapper>
+        </>
+      )}
 
-      <List.Header className="relative flex items-center">
-        <List.Text level="heading">Income</List.Text>
-        <Button
-          className="absolute right-4.5"
-          isDisabled
-          isIconOnly
-          size="xs"
-          variant="ghost"
-        >
-          􀅼
-        </Button>
-      </List.Header>
-      <List.Wrapper>
-        {incomeCategories.map((cat) => (
-          <Item category={cat} key={cat._id} />
-        ))}
-      </List.Wrapper>
+      {showIncome && (
+        <>
+          <List.Header className="relative flex items-center">
+            <List.Text level="heading">Income</List.Text>
+            <Button
+              className="absolute right-4.5"
+              isDisabled
+              isIconOnly
+              size="xs"
+              variant="ghost"
+            >
+              􀅼
+            </Button>
+          </List.Header>
+          <List.Wrapper>
+            {incomeCategories.map((cat) => (
+              <Item category={cat} key={cat._id} />
+            ))}
+          </List.Wrapper>
+        </>
+      )}
     </List.Root>
   )
 }
