@@ -8,7 +8,10 @@ import "./globals.css"
 
 import Provider from "@/components/provider"
 
-console.log("cause error here!")
+console.logcause
+error
+here!
+")
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
