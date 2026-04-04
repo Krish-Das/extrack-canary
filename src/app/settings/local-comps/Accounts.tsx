@@ -1,7 +1,8 @@
 import NumberFlow from "@number-flow/react"
 import { useQuery } from "convex-helpers/react/cache/hooks"
 import Link from "next/link"
-import { type CSSProperties, useState } from "react"
+import { useRouter } from "next/navigation"
+import { type CSSProperties, useEffect, useState } from "react"
 import { Button as RacButton } from "react-aria-components"
 import { api } from "#/convex/_generated/api"
 import type { Doc } from "#/convex/_generated/dataModel"
@@ -16,8 +17,17 @@ import { Spacer } from "@/components/ui/spacer"
 import { CURRENCY } from "@/lib/date-utils"
 
 export function Accounts() {
+  const router = useRouter()
   const accounts = useQuery(api.account.list)
   const defaultAccountId = useQuery(api.account.getDefault)
+
+  useEffect(() => {
+    if (!accounts) return
+
+    for (const account of accounts) {
+      router.prefetch(`/settings/accounts/${account._id}`)
+    }
+  }, [accounts, router])
 
   if (!accounts) return <Spinner />
 
