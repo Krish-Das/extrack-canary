@@ -77,6 +77,7 @@ function AccountItems(props: { account: Doc<"accounts">; isDefault: boolean }) {
       <Link
         className="cursor-auto data-pressed:bg-fill-tertiary"
         href={`/settings/accounts/${slug}`}
+        prefetch={true}
         style={
           {
             WebkitUserDrag: "none",
