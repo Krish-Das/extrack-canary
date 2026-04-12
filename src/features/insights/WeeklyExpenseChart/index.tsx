@@ -2,11 +2,22 @@
 
 import { eachDayOfInterval, endOfToday, startOfDay, subDays } from "date-fns"
 import useMeasure from "react-use-measure"
+import type { Colors } from "#lib/constants/colors"
 import { Spacer } from "@/components/ui/spacer"
-import { Chart } from "./chart"
+import { Chart, type Data } from "./chart"
+import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter"
 
-export default function WeeklyExpenseChart() {
+interface WeeklyExpenseChartProps {
+  data: Data
+  color?: Exclude<Colors, "gray">
+}
+
+export default function WeeklyExpenseChart(
+  // TODO: remove this omit before shipping
+  props: Omit<WeeklyExpenseChartProps, "data">
+) {
   const [containerRef, bound] = useMeasure()
+  const formatter = useCurrencyFormatter()
 
   const rangeEndDate = endOfToday()
   const rangeStartDate = startOfDay(subDays(rangeEndDate, 6))
@@ -19,11 +30,24 @@ export default function WeeklyExpenseChart() {
     return { date, value: Math.round(Math.random() * 100) + 8 }
   })
 
+  const sum = data.reduce((acc, d) => acc + d.value, 0)
+  const average = Math.round(sum / data.length)
+  const formattedAverage = formatter.format(average)
+
   return (
-    <div className="corner-squircle inline-flex aspect-square w-48 max-w-full flex-col rounded-4xl bg-fill-secondary p-4">
+    <div
+      className="corner-squircle inline-flex h-48 w-full flex-col rounded-4xl bg-fill-secondary p-4"
+      style={
+        {
+          "--chart-color": `var(--ios-${props.color})`,
+        } as React.CSSProperties
+      }
+    >
       <p className="text-lg">last 7 days</p>
       <p className="">
-        <span className="font-semibold text-4xl text-ios-green">6,201</span>{" "}
+        <span className="font-semibold text-(--chart-color) text-4xl">
+          {formattedAverage}
+        </span>{" "}
         <span className="text-base">Avg.</span>
       </p>
 
