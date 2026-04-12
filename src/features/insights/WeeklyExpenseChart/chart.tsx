@@ -31,7 +31,11 @@ export function Chart(props: ChartProps<Data>) {
   const avgBarY = yScale(average)
 
   const Root = () => (
-    <svg overflow="visible" viewBox={`0 0 ${width} ${height}`}>
+    <svg
+      className="size-full"
+      overflow="visible"
+      viewBox={`0 0 ${width} ${height}`}
+    >
       <title>Weekly Expense Chart</title>
       {data.map((data) => {
         const x = xScale(data.date.toString())
