@@ -4,15 +4,15 @@ import { eachDayOfInterval, endOfToday, startOfDay, subDays } from "date-fns"
 import useMeasure from "react-use-measure"
 import type { Colors } from "#lib/constants/colors"
 import { Spacer } from "@/components/ui/spacer"
-import { Chart, type Data } from "./chart"
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter"
+import { Chart, type Data } from "./chart"
 
 interface WeeklyExpenseChartProps {
   data: Data
   color?: Exclude<Colors, "gray">
 }
 
-export default function WeeklyExpenseChart(
+export function WeeklyAverageChart(
   // TODO: remove this omit before shipping
   props: Omit<WeeklyExpenseChartProps, "data">
 ) {
