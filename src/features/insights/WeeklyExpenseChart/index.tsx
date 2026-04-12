@@ -29,7 +29,7 @@ export default function WeeklyExpenseChart() {
 
       <Spacer className="h-2" />
 
-      <div className="h-full w-full flex-1" ref={containerRef}>
+      <div className="min-h-0 w-full flex-1" ref={containerRef}>
         <Chart
           bound={{ height: bound.height, width: bound.width }}
           data={data}
