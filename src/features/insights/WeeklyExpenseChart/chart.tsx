@@ -1,3 +1,4 @@
+import * as d3 from "d3"
 import type { ChartProps } from "../helpers/types"
 
 export type Data = {
@@ -7,13 +8,45 @@ export type Data = {
 export function Chart(props: ChartProps<Data>) {
   const {
     bound: { height, width },
+    data,
   } = props
 
   const DEBUG = false
 
+  const dates = data.map((d) => String(d.date))
+  const xScale = d3
+    .scaleBand()
+    .domain(dates.map((d) => d))
+    .range([0, width])
+    .paddingInner(0.3)
+
+  const values = data.map((d) => d.value)
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(values) ?? 0])
+    .range([0, height])
+
   const Root = () => (
     <svg overflow="visible" viewBox={`0 0 ${width} ${height}`}>
       <title>Weekly Expense Chart</title>
+      {data.map((data) => {
+        const x = xScale(data.date.toString())
+        const barHeight = yScale(data.value)
+
+        return (
+          <g
+            className="text-label-tertiary"
+            key={data.date.toString()}
+            transform={`translate(${x},${height}) scale(1,-1)`}
+          >
+            <rect
+              fill="currentColor"
+              height={barHeight}
+              width={xScale.bandwidth()}
+            />
+          </g>
+        )
+      })}
       <ViewBoxBound />
     </svg>
   )
