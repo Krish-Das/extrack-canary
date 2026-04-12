@@ -60,7 +60,7 @@ export function Chart(props: ChartProps<Data>) {
       })}
 
       <g
-        className="text-ios-green"
+        className="text-(--chart-color)"
         transform={`translate(0,${height - avgBarY}) scale(1,-1)`}
       >
         <line
