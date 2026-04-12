@@ -26,12 +26,17 @@ export function Chart(props: ChartProps<Data>) {
     .domain([0, d3.max(values) ?? 0])
     .range([0, height])
 
+  const sum = values.reduce((acc, v) => acc + v, 0)
+  const average = Math.round(sum / values.length)
+  const avgBarY = yScale(average)
+
   const Root = () => (
     <svg overflow="visible" viewBox={`0 0 ${width} ${height}`}>
       <title>Weekly Expense Chart</title>
       {data.map((data) => {
         const x = xScale(data.date.toString())
         const barHeight = yScale(data.value)
+        const barRadius = 5
 
         return (
           <g
@@ -42,11 +47,26 @@ export function Chart(props: ChartProps<Data>) {
             <rect
               fill="currentColor"
               height={barHeight}
+              rx={barRadius}
+              ry={barRadius}
               width={xScale.bandwidth()}
             />
           </g>
         )
       })}
+
+      <g
+        className="text-ios-green"
+        transform={`translate(0,${height - avgBarY}) scale(1,-1)`}
+      >
+        <line
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth={3}
+          x2={width}
+        />
+      </g>
       <ViewBoxBound />
     </svg>
   )
