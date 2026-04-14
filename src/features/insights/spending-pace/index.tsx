@@ -10,17 +10,17 @@ export function SpendingPace() {
     style: "percent",
   })
 
-  const percentage = 0.8
+  const percentage = 0.75
   const formatted = formatter.format(percentage)
 
   return (
     <div className="corner-squircle w-full rounded-4xl bg-background-primary-elevated p-4 shadow-ios-md">
       <p className="mb-3 font-medium text-lg">
-        Spent {formatted} of this month's income
+        Left {formatted} of this month's income
       </p>
 
       <div
-        className="corner-squircle h-12 w-full rounded-xls pl-0.5"
+        className="corner-squircle h-8 w-full rounded-xls pl-0.5"
         ref={containerRef}
       >
         <Chart

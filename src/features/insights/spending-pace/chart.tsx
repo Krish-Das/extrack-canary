@@ -20,48 +20,77 @@ export function Chart(props: ChartProps<Data>) {
     .range([0, width])
     .paddingInner(0.3)
 
+  const lineHeight = height
+  const showLine = false satisfies boolean
+
   // TODO: directly export svg instead of named function
   const Root = () => (
     <svg overflow="visible" viewBox={`0 0 ${width} ${height}`}>
       <title>Spending Pace</title>
 
-      {Array.from({ length: barCount }, (_, idx) => {
-        const width = xScale.bandwidth()
+      {showLine && (
+        <g>
+          <rect
+            className="text-fill-secondary"
+            fill="currentColor"
+            height={lineHeight}
+            rx={6}
+            ry={6}
+            stroke="none"
+            width={width}
+          />
+          <rect
+            className="text-ios-red"
+            fill="currentColor"
+            height={lineHeight}
+            rx={6}
+            ry={6}
+            stroke="none"
+            width={width * percentage}
+          />
+        </g>
+      )}
 
-        // WARN: rename before shipping
-        const shouldColor = idx < Math.round(barCount * percentage)
-        // WARN: rename before shipping
-        // biome-ignore lint/correctness/noUnusedVariables: <explanation>
-        const strokeWidth = width / 2
+      {!showLine &&
+        Array.from({ length: barCount }, (_, idx) => {
+          const width = xScale.bandwidth()
 
-        return (
-          <g
-            key={String(idx)}
-            transform={`translate(${xScale(String(idx))},0)`}
-          >
-            {/*<line
-              // round caps bleed outside by r, so we shorten each end by r to compensate
-              className={shouldColor ? "text-ios-red" : "text-fill-secondary"}
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth={width}
-              x1={strokeWidth}
-              x2={strokeWidth}
-              y1={strokeWidth}
-              y2={height - strokeWidth}
+          // WARN: rename before shipping
+          const shouldColor = idx < Math.round(barCount * percentage)
+          // WARN: rename before shipping
+          // biome-ignore lint/correctness/noUnusedVariables: <explanation>
+          const strokeWidth = width / 2
+
+          return (
+            <g
+              key={String(idx)}
+              transform={`translate(${xScale(String(idx))},0)`}
+            >
+              {/*<line
+            // round caps bleed outside by r, so we shorten each end by r to compensate
+            className={shouldColor ? "text-ios-red" : "text-fill-secondary"}
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth={width}
+            x1={strokeWidth}
+            x2={strokeWidth}
+            y1={strokeWidth}
+            y2={height - strokeWidth}
             />*/}
-            <rect
-              className={shouldColor ? "text-ios-red" : "text-fill-secondary"}
-              fill="currentColor"
-              height={barHeight}
-              rx={barRadius}
-              ry={barRadius}
-              stroke="none"
-              width={xScale.bandwidth()}
-            />
-          </g>
-        )
-      })}
+              <rect
+                className={
+                  shouldColor ? "text-label-primary" : "text-fill-secondary"
+                }
+                fill="currentColor"
+                height={barHeight}
+                rx={barRadius}
+                ry={barRadius}
+                stroke="none"
+                width={xScale.bandwidth()}
+              />
+            </g>
+          )
+        })}
 
       <ViewBoxBound />
     </svg>
