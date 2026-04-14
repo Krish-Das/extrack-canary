@@ -1,0 +1,31 @@
+"use client"
+
+import { eachDayOfInterval, endOfToday, startOfDay, subDays } from "date-fns"
+import useMeasure from "react-use-measure"
+import { Chart } from "./chart"
+
+export function BalanceTrend() {
+  const [containerRef, bound] = useMeasure()
+
+  const rangeEndDate = endOfToday()
+  const rangeStartDate = startOfDay(subDays(rangeEndDate, 3))
+  const dateRange = eachDayOfInterval({
+    start: rangeStartDate,
+    end: rangeEndDate,
+  })
+
+  const data = dateRange.map((date) => {
+    return {
+      date,
+      value:
+        // 99,
+        Math.round(Math.random() * 100),
+    }
+  })
+
+  return (
+    <div className="h-52 w-full" ref={containerRef}>
+      <Chart bound={{ height: bound.height, width: bound.width }} data={data} />
+    </div>
+  )
+}
