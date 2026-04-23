@@ -8,7 +8,7 @@ export function BalanceTrend() {
   const [containerRef, bound] = useMeasure()
 
   const rangeEndDate = endOfToday()
-  const rangeStartDate = startOfDay(subDays(rangeEndDate, 3))
+  const rangeStartDate = startOfDay(subDays(rangeEndDate, 3)) // TODO: Make it 29 (30 days)
   const dateRange = eachDayOfInterval({
     start: rangeStartDate,
     end: rangeEndDate,

@@ -1,6 +1,7 @@
 import * as d3 from "d3"
-import type { ChartProps } from "../helpers/types"
 import { format } from "date-fns"
+import type { ChartProps } from "../helpers/types"
+import { Spinner } from "@/components/loading/spinner"
 
 export function Chart(
   props: ChartProps<{ data: { date: Date; value: number }[] }>
@@ -10,8 +11,9 @@ export function Chart(
     data,
   } = props
 
-  const DEBUG = false
+  if (!data?.length) <Spinner />
 
+  // TODO: rename these variables
   const gapBottom = 18
   const chartWidth = width
   const chartHeight = height - gapBottom
@@ -31,24 +33,18 @@ export function Chart(
     .y((d) => yScale(d.value))
     .curve(d3.curveMonotoneX)
 
-  const lastDateFmt = format(data.at(-1)?.date, "dd")
+  const lastDateFmt = format(data.at(-1)?.date ?? Date.now(), "dd")
 
-  const Root = () => (
+  const pillWidth = 3
+  const pillHeight = 8
+
+  return (
     <svg
       className="size-full"
       overflow="visible"
       viewBox={`0 0 ${width} ${height}`}
     >
-      <title>Balance Trend</title>
-      <line
-        className="hidden text-red-300"
-        fill="none"
-        stroke="currentColor"
-        strokeDasharray="3"
-        x2={width}
-        y2={height}
-      />
-
+      <title>Balance Trend for last 30 days</title>
       <g transform={`translate(0,${chartHeight}) scale(1,-1)`}>
         <path
           className="text-label-secondary"
@@ -65,17 +61,17 @@ export function Chart(
           stroke="currentColor"
           strokeWidth={3}
         />
+        <rect
+          className="text-label-primary"
+          fill="currentColor"
+          height={pillHeight}
+          rx={2}
+          ry={2}
+          transform={`translate(-${pillWidth / 2},-${pillHeight / 2})`}
+          width={pillWidth}
+          x={chartWidth}
+        />
       </g>
-      <LineJoin />
-      <ViewBoxBound />
-    </svg>
-  )
-
-  const LineJoin = () => {
-    const lineWidth = 3
-    const lineHeight = 8
-
-    return (
       <g transform={`translate(${chartWidth},${height})`}>
         <text
           className="font-medium text-label-secondary text-xs"
@@ -84,33 +80,7 @@ export function Chart(
         >
           {lastDateFmt}
         </text>
-        <rect
-          className="text-label-primary"
-          fill="currentColor"
-          height={lineHeight}
-          rx={2}
-          ry={2}
-          transform="scale(1,-1)"
-          width={lineWidth}
-          x={lineWidth * -0.5}
-          y={lineHeight * -0.5 + gapBottom}
-        />
       </g>
-    )
-  }
-
-  // TODO: remove this component before shipping
-  const ViewBoxBound = () => {
-    if (!DEBUG) return
-    return (
-      <path
-        d={`M 0 0 L 0 ${height} ${width} ${height} ${width} 0 0 0`}
-        fill="none"
-        stroke="#f00"
-        strokeWidth="1.5"
-      />
-    )
-  }
-
-  return <Root />
+    </svg>
+  )
 }

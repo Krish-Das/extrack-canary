@@ -36,7 +36,7 @@ export function WeeklyAverageChart(
 
   return (
     <div
-      className="corner-squircle inline-flex h-48 w-full flex-col rounded-4xl bg-fill-secondary p-4"
+      className="corner-squircle inline-flex h-48 w-full flex-col rounded-4xl bg-background-primary-elevated p-4 shadow-ios-md"
       style={
         {
           "--chart-color": `var(--ios-${props.color})`,
