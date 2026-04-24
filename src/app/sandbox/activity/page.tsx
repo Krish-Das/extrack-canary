@@ -1,14 +1,12 @@
-"use client"
-
-import { useAuth } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 import Link from "next/link"
 import { Suspense } from "react"
 import { Container } from "@/components/layout/container"
 import SandboxNav from "../nav"
 import TransactionList from "./TransactionList"
 
-export default function SummaryPage() {
-  const { userId } = useAuth()
+export default async function SummaryPage() {
+  const { userId } = await auth()
 
   if (userId === undefined) {
     return <p>loading user...</p>
