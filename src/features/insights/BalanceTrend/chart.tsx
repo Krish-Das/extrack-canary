@@ -1,7 +1,8 @@
+// biome-ignore lint/performance/noNamespaceImport: <explanation>
 import * as d3 from "d3"
 import { format } from "date-fns"
-import type { ChartProps } from "../helpers/types"
 import { Spinner } from "@/components/loading/spinner"
+import type { ChartProps } from "../helpers/types"
 
 export function Chart(
   props: ChartProps<{ data: { date: Date; value: number }[] }>
@@ -56,7 +57,7 @@ export function Chart(
         />
         <path
           className="text-label-primary"
-          d={line(data)}
+          d={line(data) ?? undefined}
           fill="none"
           stroke="currentColor"
           strokeWidth={3}
