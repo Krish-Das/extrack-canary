@@ -1,31 +1,9 @@
-"use client"
-
-import { useAuth } from "@clerk/nextjs"
-import Link from "next/link"
 import { Suspense } from "react"
 import { Container } from "@/components/layout/container"
 import SandboxNav from "../nav"
 import TransactionList from "./TransactionList"
 
 export default async function SummaryPage() {
-  const { userId } = useAuth()
-
-  if (userId === undefined) {
-    return <p>loading user...</p>
-  }
-
-  if (userId === null) {
-    return (
-      <p>
-        You must be{" "}
-        <Link className="font-medium text-ios-blue" href="/sign-in">
-          signed in
-        </Link>{" "}
-        to view this page.
-      </p>
-    )
-  }
-
   return (
     <>
       <SandboxNav />
