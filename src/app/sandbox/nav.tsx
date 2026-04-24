@@ -1,6 +1,4 @@
-"use client"
-
-import { Link } from "react-aria-components"
+import Link from "next/link"
 import { Container } from "@/components/layout/container"
 
 export default function SandboxNav() {
