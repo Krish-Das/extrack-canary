@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Container } from "@/components/layout/container"
+import { Button } from "@/components/ui/button"
 import { Spacer } from "@/components/ui/spacer"
 import { Balance } from "./_comps/Balance"
 import { Splash } from "./_comps/Splash"
@@ -25,6 +26,9 @@ export default function Page() {
         ) : (
           <Balance onSwitchTab={switchPreviousTab} />
         )}
+        <Button className="mx-auto" onPress={cycleTabs}>
+          {activeTab === "splash" ? "Setup Account" : "Continue"}
+        </Button>
         <Spacer className="h-16" />
       </Container>
     </main>

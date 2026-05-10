@@ -23,10 +23,6 @@ export function Balance({ onSwitchTab }: { onSwitchTab?: () => void }) {
         />
       </div>
 
-      <Button className="mx-auto" onPress={onSwitchTab}>
-        Continue
-      </Button>
-
       <Button className="absolute top-4 right-0" variant="ghost">
         Skip
       </Button>
