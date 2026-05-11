@@ -8,12 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Spacer } from "@/components/ui/spacer"
 import { wait } from "@/lib/utils"
 import { Balance } from "./_comps/Balance"
+import { type Tab, tabs } from "./_comps/helpers"
 import { Splash } from "./_comps/Splash"
-
-const tabs = ["splash", "balance"] as const
-export type Tab = (typeof tabs)[number]
-
-const MSpinner = motion(Spinner)
+import { StepButton } from "./_comps/StepButton"
 
 export default function Page() {
   const [count, setCount] = useState<number>(0)
@@ -80,7 +77,8 @@ function StepContent({ activeTab }: { activeTab: Tab }) {
   )
 }
 
-function StepButton({
+// TODO: Remove this depricated component
+function _StepButton({
   activeTab,
   cycleTabs,
 }: {
