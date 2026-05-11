@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  AnimatePresence,
-  MotionConfig,
-  motion,
-  type Transition,
-} from "motion/react"
+import { AnimatePresence, motion, type Transition } from "motion/react"
 import { useState } from "react"
 import { Container } from "@/components/layout/container"
 import { Spinner } from "@/components/loading/spinner"
@@ -163,49 +158,41 @@ function StepButton({
         }}
       />
 
-      <MotionConfig
-        transition={
-          {
-            // duration: 3,
-          }
-        }
+      <motion.span
+        animate={activeTab === "splash" ? "splash" : "balance"}
+        className="relative block h-full overflow-hidden"
+        initial={false}
+        variants={{
+          balance: { width: "4rem" },
+          splash: { width: "6.5rem" },
+        }}
       >
-        <motion.span
-          animate={activeTab === "splash" ? "splash" : "balance"}
-          className="relative block h-full overflow-hidden"
-          initial={false}
-          variants={{
-            balance: { width: "4rem" },
-            splash: { width: "6.5rem" },
-          }}
-        >
-          <AnimatePresence mode="popLayout">
-            {activeTab === "splash" ? (
-              <motion.span
-                animate="idle"
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                exit="exit"
-                initial={false}
-                key="splash"
-                variants={variants}
-              >
-                Setup Account
-              </motion.span>
-            ) : (
-              <motion.span
-                animate="idle"
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                exit="exit"
-                initial="initial"
-                key="other"
-                variants={variants}
-              >
-                Continue
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.span>
-      </MotionConfig>
+        <AnimatePresence mode="popLayout">
+          {activeTab === "splash" ? (
+            <motion.span
+              animate="idle"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              exit="exit"
+              initial={false}
+              key="splash"
+              variants={variants}
+            >
+              Setup Account
+            </motion.span>
+          ) : (
+            <motion.span
+              animate="idle"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              exit="exit"
+              initial="initial"
+              key="other"
+              variants={variants}
+            >
+              Continue
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.span>
     </Button>
   )
 }
