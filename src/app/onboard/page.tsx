@@ -8,8 +8,6 @@ import { Spacer } from "@/components/ui/spacer"
 import { Balance } from "./_comps/Balance"
 import { Splash } from "./_comps/Splash"
 
-const MButton = motion(Button)
-
 const tabs = ["splash", "balance"] as const
 export type Tab = (typeof tabs)[number]
 
@@ -33,21 +31,7 @@ export default function Page() {
         >
           {activeTab === "splash" ? "Setup Account" : "Continue"}
         </Button>
-
-        {/* --- SKIP BUTTON --- */}
-        <MButton
-          animate={activeTab === "balance" ? "shown" : "hidden"}
-          className="absolute top-4 right-0"
-          initial="hidden"
-          variant="ghost"
-          variants={{
-            hidden: { opacity: 0 },
-            shown: { opacity: 1, transition: { delay: 0.575 } },
-          }}
-        >
-          Skip
-        </MButton>
-
+        <SkipButton isVisible={activeTab === "balance"} />
         <Spacer className="h-16" />
       </Container>
     </main>
@@ -93,5 +77,25 @@ function StepContent({ activeTab }: { activeTab: Tab }) {
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+// TODO: use link to navigate to `/`
+const MButton = motion(Button)
+function SkipButton({ isVisible }: { isVisible: boolean }) {
+  return (
+    <MButton
+      animate={isVisible ? "shown" : "hidden"}
+      className="absolute top-4 right-0"
+      initial="hidden"
+      onPress={onSkip}
+      variant="ghost"
+      variants={{
+        hidden: { opacity: 0 },
+        shown: { opacity: 1, transition: { delay: 0.575 } },
+      }}
+    >
+      Skip
+    </MButton>
   )
 }
