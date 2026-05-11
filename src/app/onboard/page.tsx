@@ -30,7 +30,6 @@ export default function Page() {
     stiffness: 400,
     damping: 40,
     mass: 1,
-    // duration: 3,
   } satisfies Transition
 
   return (
