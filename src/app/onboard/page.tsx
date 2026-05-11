@@ -33,7 +33,10 @@ export default function Page() {
       <Container as="section" className="relative flex h-full flex-1 flex-col">
         <StepContent activeTab={activeTab} />
         <StepButton activeTab={activeTab} cycleTabs={cycleTabs} />
-        <SkipButton isVisible={activeTab === "balance"} />
+        <SkipButton
+          isVisible={activeTab === "balance"}
+          onSkip={() => setCount(0)}
+        />
       </Container>
       <Spacer className="h-16" />
     </main>
@@ -209,7 +212,13 @@ function StepButton({
 
 // TODO: use link to navigate to `/`
 const MButton = motion(Button)
-function SkipButton({ isVisible }: { isVisible: boolean }) {
+function SkipButton({
+  isVisible,
+  onSkip,
+}: {
+  isVisible: boolean
+  onSkip?: () => void // NOTE: Debug only; remove this prop
+}) {
   return (
     <MButton
       animate={isVisible ? "shown" : "hidden"}
