@@ -19,9 +19,9 @@ export default function Page() {
   const activeTab = tabs.at(count) as Tab
 
   return (
-    <main className="px-4 md:px-0">
+    <main className="flex h-svh flex-col px-4 md:px-0">
       <span className="pointer-events-none absolute inset-0 bg-[#F7F8F7] dark:bg-background" />
-      <Container as="section" className="relative flex h-svh flex-col">
+      <Container as="section" className="relative flex h-full flex-1 flex-col">
         <StepContent activeTab={activeTab} />
 
         <Button
@@ -32,8 +32,8 @@ export default function Page() {
           {activeTab === "splash" ? "Setup Account" : "Continue"}
         </Button>
         <SkipButton isVisible={activeTab === "balance"} />
-        <Spacer className="h-16" />
       </Container>
+      <Spacer className="h-16" />
     </main>
   )
 }
