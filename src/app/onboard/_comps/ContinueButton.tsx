@@ -4,7 +4,7 @@ import { Spinner } from "@/components/loading/spinner"
 import { Button } from "@/components/ui/button"
 import type { LoadingState, Tab } from "./helpers"
 
-export function StepButton({
+export function ContinueButton({
   activeTab,
   loading,
   onContinue,
@@ -27,13 +27,13 @@ export function StepButton({
       isPending={loading === "loading"}
       onPress={onContinue}
     >
-      <ButtonStatusIndicator loading={loading} />
-      <StepButtonLabel activeTab={activeTab} />
+      <StatusIndicator loading={loading} />
+      <Label activeTab={activeTab} />
     </Button>
   )
 }
 
-const ButtonStatusIndicator = ({ loading }: { loading: LoadingState }) => {
+const StatusIndicator = ({ loading }: { loading: LoadingState }) => {
   const variants = {
     hidden: {
       opacity: 0,
@@ -93,7 +93,7 @@ const ButtonStatusIndicator = ({ loading }: { loading: LoadingState }) => {
   )
 }
 
-function StepButtonLabel({ activeTab }: { activeTab: Tab }) {
+function Label({ activeTab }: { activeTab: Tab }) {
   const variants = {
     idle: { opacity: 1, scale: 1, filter: "blur(0px)" },
     exit: { opacity: 0, scale: 0.9, filter: "blur(3px)" },

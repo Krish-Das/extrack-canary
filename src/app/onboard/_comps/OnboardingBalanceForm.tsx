@@ -13,9 +13,9 @@ import { limit } from "#lib/constants/constraints"
 import { v } from "#lib/validators"
 import { wait } from "@/lib/utils"
 import { Balance } from "./Balance"
+import { ContinueButton } from "./ContinueButton"
 import type { LoadingState, Tab } from "./helpers"
 import { Splash } from "./Splash"
-import { StepButton } from "./StepButton"
 
 const onboardingBalanceSchema = z.object({
   amount: v.dollars(
@@ -64,7 +64,7 @@ export function OnboardingBalanceForm({
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <StepContent activeTab={activeTab} form={form} />
-      <StepButton
+      <ContinueButton
         activeTab={activeTab}
         loading={loading}
         onContinue={handleContinue}
