@@ -1,30 +1,18 @@
 import { AnimatePresence, motion, type Variants } from "motion/react"
-import { useState } from "react"
 import type { Colors } from "#lib/constants/colors"
 import { Spinner } from "@/components/loading/spinner"
 import { Button } from "@/components/ui/button"
-import { wait } from "@/lib/utils"
 import type { LoadingState, Tab } from "./helpers"
 
 export function StepButton({
   activeTab,
-  cycleTabs,
+  loading,
+  onContinue,
 }: {
   activeTab: Tab
-  cycleTabs: () => void
+  loading: LoadingState
+  onContinue: () => void
 }) {
-  const [loading, setLoading] = useState<LoadingState>("idle")
-
-  // NOTE: Debug only; don't ship this function
-  // TODO: Remove this function
-  async function autoToggle() {
-    setLoading("loading")
-    await wait(2000)
-    setLoading("done")
-    await wait(1200)
-    setLoading("idle")
-  }
-
   const statusButtonColors: Record<LoadingState, Colors> = {
     idle: "blue",
     loading: "gray",
@@ -37,14 +25,7 @@ export function StepButton({
       className="mx-auto gap-0"
       color={currentButtonColor}
       isPending={loading === "loading"}
-      onPress={() => {
-        if (loading !== "idle") return
-        if (activeTab === "splash") {
-          cycleTabs()
-          return
-        }
-        autoToggle()
-      }}
+      onPress={onContinue}
     >
       <ButtonStatusIndicator loading={loading} />
       <StepButtonLabel activeTab={activeTab} />
