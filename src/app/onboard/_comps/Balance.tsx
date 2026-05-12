@@ -3,9 +3,9 @@ import { Controller, type UseFormReturn } from "react-hook-form"
 import { limit } from "#lib/constants/constraints"
 import { currencyFormatOptions } from "@/hooks/useCurrencyFormatter"
 import { cn } from "@/lib/utils"
-import type { Inputs } from "./OnboardingBalanceForm"
+import type { BalanceFormValues } from "./OnboardingBalanceForm"
 
-export function Balance({ form }: { form: UseFormReturn<Inputs> }) {
+export function Balance({ form }: { form: UseFormReturn<BalanceFormValues> }) {
   return (
     <Controller
       control={form.control}
@@ -19,11 +19,11 @@ export function Balance({ form }: { form: UseFormReturn<Inputs> }) {
           formatOptions={currencyFormatOptions}
           isInvalid={invalid}
           isRequired
-          maxValue={limit.amount.account.startingBalance.max}
+          maxValue={limit.amount.account.startingBalance.max / 100 /* Cents */}
           name={name}
           onBlur={onBlur}
           onChange={onChange}
-          validationBehavior="aria" // TODO: Convert in dollar
+          validationBehavior="aria"
           value={value}
         >
           <Label className="text-center text-xl leading-none">

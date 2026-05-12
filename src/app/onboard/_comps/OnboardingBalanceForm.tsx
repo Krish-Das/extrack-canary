@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { AnimatePresence, motion, type Transition } from "motion/react"
 import { useState } from "react"
 import { Form as RacForm } from "react-aria-components"
@@ -7,15 +8,22 @@ import {
   useForm,
 } from "react-hook-form"
 import { toast } from "sonner"
+import z from "zod/v3"
+import { limit } from "#lib/constants/constraints"
+import { v } from "#lib/validators"
 import { wait } from "@/lib/utils"
 import { Balance } from "./Balance"
 import type { LoadingState, Tab } from "./helpers"
 import { Splash } from "./Splash"
 import { StepButton } from "./StepButton"
 
-// TODO: Use zod here
-// TODO: Rename this type
-export type Inputs = { amount: number }
+const onboardingBalanceSchema = z.object({
+  amount: v.dollars(
+    limit.amount.account.startingBalance.min,
+    limit.amount.account.startingBalance.max / 100 // cents
+  ),
+})
+export type BalanceFormValues = z.infer<typeof onboardingBalanceSchema>
 
 export function OnboardingBalanceForm({
   activeTab,
@@ -26,9 +34,11 @@ export function OnboardingBalanceForm({
 }) {
   const [loading, setLoading] = useState<LoadingState>("idle")
 
-  // TODO: Use zod here
-  const form = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = async ({ amount }) => {
+  const form = useForm<BalanceFormValues>({
+    resolver: zodResolver(onboardingBalanceSchema),
+  })
+  const onSubmit: SubmitHandler<BalanceFormValues> = async (data) => {
+    const amount = data.amount * 100
     setLoading("loading")
     await wait(1800)
     setLoading("done")
@@ -68,7 +78,7 @@ function StepContent({
   form,
 }: {
   activeTab: Tab
-  form: UseFormReturn<Inputs>
+  form: UseFormReturn<BalanceFormValues>
 }) {
   const transition = {
     type: "spring",
