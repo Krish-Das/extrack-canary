@@ -14,7 +14,7 @@ import { v } from "#lib/validators"
 import { wait } from "@/lib/utils"
 import { Balance } from "./Balance"
 import { ContinueButton } from "./ContinueButton"
-import type { LoadingState, Tab } from "./helpers"
+import type { LoadingState, OnboardingStep } from "./helpers"
 import { Splash } from "./Splash"
 
 const onboardingBalanceSchema = z.object({
@@ -26,11 +26,11 @@ const onboardingBalanceSchema = z.object({
 export type BalanceFormValues = z.infer<typeof onboardingBalanceSchema>
 
 export function OnboardingBalanceForm({
-  activeTab,
-  switchNextTab,
+  activeStep,
+  nextStep,
 }: {
-  activeTab: Tab
-  switchNextTab: () => void
+  activeStep: OnboardingStep
+  nextStep: () => void
 }) {
   const [loading, setLoading] = useState<LoadingState>("idle")
 
@@ -51,8 +51,8 @@ export function OnboardingBalanceForm({
 
   const handleContinue = async () => {
     if (loading !== "idle") return
-    if (activeTab === "splash") {
-      switchNextTab()
+    if (activeStep === "welcome") {
+      nextStep()
       return
     }
     await form.handleSubmit(onSubmit)()
@@ -63,9 +63,9 @@ export function OnboardingBalanceForm({
       className="flex h-full flex-col"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <StepContent activeTab={activeTab} form={form} />
+      <StepContent activeStep={activeStep} form={form} />
       <ContinueButton
-        activeTab={activeTab}
+        activeStep={activeStep}
         loading={loading}
         onContinue={handleContinue}
       />
@@ -74,10 +74,10 @@ export function OnboardingBalanceForm({
 }
 
 function StepContent({
-  activeTab,
+  activeStep,
   form,
 }: {
-  activeTab: Tab
+  activeStep: OnboardingStep
   form: UseFormReturn<BalanceFormValues>
 }) {
   const transition = {
@@ -89,13 +89,13 @@ function StepContent({
 
   return (
     <AnimatePresence mode="popLayout">
-      {activeTab === "splash" ? (
+      {activeStep === "welcome" ? (
         <motion.div
           animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           className="flex flex-1 flex-col"
           exit={{ opacity: 0, x: -12, filter: "blur(3px)" }}
           initial={false}
-          key="splash"
+          key="welcome"
           transition={transition}
         >
           <Splash />

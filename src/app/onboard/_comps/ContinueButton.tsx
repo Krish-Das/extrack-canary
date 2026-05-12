@@ -2,14 +2,14 @@ import { AnimatePresence, motion, type Variants } from "motion/react"
 import type { Colors } from "#lib/constants/colors"
 import { Spinner } from "@/components/loading/spinner"
 import { Button } from "@/components/ui/button"
-import type { LoadingState, Tab } from "./helpers"
+import type { LoadingState, OnboardingStep } from "./helpers"
 
 export function ContinueButton({
-  activeTab,
+  activeStep,
   loading,
   onContinue,
 }: {
-  activeTab: Tab
+  activeStep: OnboardingStep
   loading: LoadingState
   onContinue: () => void
 }) {
@@ -28,7 +28,7 @@ export function ContinueButton({
       onPress={onContinue}
     >
       <StatusIndicator loading={loading} />
-      <Label activeTab={activeTab} />
+      <Label activeStep={activeStep} />
     </Button>
   )
 }
@@ -93,7 +93,7 @@ const StatusIndicator = ({ loading }: { loading: LoadingState }) => {
   )
 }
 
-function Label({ activeTab }: { activeTab: Tab }) {
+function Label({ activeStep }: { activeStep: OnboardingStep }) {
   const variants = {
     idle: { opacity: 1, scale: 1, filter: "blur(0px)" },
     exit: { opacity: 0, scale: 0.9, filter: "blur(3px)" },
@@ -102,23 +102,23 @@ function Label({ activeTab }: { activeTab: Tab }) {
 
   return (
     <motion.span
-      animate={activeTab === "splash" ? "splash" : "balance"}
+      animate={activeStep === "welcome" ? "welcome" : "balance"}
       className="relative block h-full"
-      initial="splash"
+      initial="welcome"
       transition={{ type: "spring", stiffness: 120, damping: 20 }}
       variants={{
         balance: { width: "4rem" },
-        splash: { width: "6.5rem" },
+        welcome: { width: "6.5rem" },
       }}
     >
       <AnimatePresence mode="popLayout">
-        {activeTab === "splash" ? (
+        {activeStep === "welcome" ? (
           <motion.span
             animate="idle"
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
             exit="exit"
             initial={false}
-            key="splash"
+            key="welcome"
             variants={variants}
           >
             Setup Account
