@@ -1,11 +1,16 @@
 import { Input, Label, NumberField } from "react-aria-components"
 import { Controller, type UseFormReturn } from "react-hook-form"
 import { limit } from "#lib/constants/constraints"
-import { currencyFormatOptions } from "@/hooks/useCurrencyFormatter"
+import {
+  currencyFormatOptions,
+  useCurrencyFormatter,
+} from "@/hooks/useCurrencyFormatter"
 import { cn } from "@/lib/utils"
 import type { BalanceFormValues } from "./OnboardingBalanceForm"
 
 export function Balance({ form }: { form: UseFormReturn<BalanceFormValues> }) {
+  const formatter = useCurrencyFormatter()
+
   return (
     <Controller
       control={form.control}
@@ -36,7 +41,7 @@ export function Balance({ form }: { form: UseFormReturn<BalanceFormValues> }) {
               "focus:outline-none focus-visible:outline-none",
               "ring-ios-blue/50 ring-offset-ios-blue/60 data-focused:ring-4 data-focused:ring-offset-2"
             )}
-            placeholder="$0" // TODO: use Formatted
+            placeholder={formatter.format(0)}
             ref={ref}
           />
         </NumberField>
