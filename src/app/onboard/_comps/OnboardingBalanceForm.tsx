@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "convex/react"
 import { useQuery } from "convex-helpers/react/cache"
 import { AnimatePresence, motion, type Transition } from "motion/react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Form as RacForm } from "react-aria-components"
 import {
@@ -35,6 +36,8 @@ export function OnboardingBalanceForm({
   activeStep: OnboardingStep
   nextStep: () => void
 }) {
+  const { push } = useRouter()
+
   const [loading, setLoading] = useState<LoadingState>("idle")
 
   const defaultAccount = useQuery(api.account.getDefault)
@@ -65,9 +68,8 @@ export function OnboardingBalanceForm({
       setLoading("loading")
       await updateStartingBalance({ id: defaultAccount, balance: amount })
       setLoading("done")
-      await wait(900)
-      setLoading("idle") // TODO: Remove this state
-      // TODO: router.push("/")
+      await wait(800)
+      push("/")
     } catch {
       setLoading("idle")
       toast.error("We couldn't save your balance. Please try again.")
