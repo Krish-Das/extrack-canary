@@ -115,7 +115,7 @@ function Label({ activeTab }: { activeTab: Tab }) {
         {activeTab === "splash" ? (
           <motion.span
             animate="idle"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
             exit="exit"
             initial={false}
             key="splash"
@@ -126,7 +126,7 @@ function Label({ activeTab }: { activeTab: Tab }) {
         ) : (
           <motion.span
             animate="idle"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
             exit="exit"
             initial="initial"
             key="other"
