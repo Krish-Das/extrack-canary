@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "convex/react"
+import { useQuery } from "convex-helpers/react/cache"
 import { AnimatePresence, motion, type Transition } from "motion/react"
 import { useState } from "react"
 import { Form as RacForm } from "react-aria-components"
@@ -9,6 +11,7 @@ import {
 } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod/v3"
+import { api } from "#/convex/_generated/api"
 import { limit } from "#lib/constants/constraints"
 import { v } from "#lib/validators"
 import { wait } from "@/lib/utils"
@@ -34,19 +37,41 @@ export function OnboardingBalanceForm({
 }) {
   const [loading, setLoading] = useState<LoadingState>("idle")
 
+  const defaultAccount = useQuery(api.account.getDefault)
+  const updateStartingBalance = useMutation(api.account.setStartingBalance)
+
   const form = useForm<BalanceFormValues>({
     resolver: zodResolver(onboardingBalanceSchema),
   })
   const onSubmit: SubmitHandler<BalanceFormValues> = async (data) => {
     const amount = data.amount * 100
-    setLoading("loading")
-    await wait(1800)
-    setLoading("done")
-    // TODO: Connect to backend
-    toast.success(`${amount} will be set as balance.`)
-    await wait(900)
-    setLoading("idle")
-    // TODO: router.push("/")
+    try {
+      if (!defaultAccount) {
+        console.error(
+          JSON.stringify({
+            severity: "CRITICAL",
+            invariant: "ONBOARDING_DEFAULT_ACCOUNT_MISSING",
+            activeStep,
+            amount,
+            message:
+              "Invariant violated: onboarding balance submission requires a default account",
+          })
+        )
+        throw new Error(
+          "Internal invariant violated: onboarding default account is missing"
+        )
+      }
+
+      setLoading("loading")
+      await updateStartingBalance({ id: defaultAccount, balance: amount })
+      setLoading("done")
+      await wait(900)
+      setLoading("idle") // TODO: Remove this state
+      // TODO: router.push("/")
+    } catch {
+      setLoading("idle")
+      toast.error("We couldn't save your balance. Please try again.")
+    }
   }
 
   const handleContinue = async () => {
